@@ -1,0 +1,413 @@
+{
+	"info": {
+		"_postman_id": "c634b392-c84c-467c-8feb-3d3cc8fbd3d0",
+		"name": "picdu testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30333640"
+	},
+	"item": [
+		{
+			"name": "Log In",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"//var userName = pm.variables.replaceIn(\"{{$randomUserName}}\");\r",
+							"//pm.collectionVariables.set(\"name\", userName);\r",
+							" \r",
+							"//var userEmail = pm.variables.replaceIn(\"{{$randomUserEmail}}\");\r",
+							"//pm.collectionVariables.set(\"userEmail\", userEmail);\r",
+							"\r",
+							"////var puserName =pm.collectionVariables.get(\"userName\");\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "name",
+						"value": "{{name}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "email",
+						"value": "{{email}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "status",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"stanga@stanga2.lt\",\r\n    \"password\": \"Stanga123.\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASED_URI}}/api/v1/planpro/users/login",
+					"host": [
+						"{{BASED_URI}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"planpro",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Details from Registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"values of json fields\", () => {\r",
+							"   var jsonData = pm.response.json();\r",
+							"\r",
+							" pm.expect(jsonData.email).to.eql(pm.environment.get(\"randomemail\"));\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"randomname\"));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"//pm.test(\"Authenticated request works\", function () {\r",
+							"    // Set up the request\r",
+							"   // var request = {\r",
+							"     //   url: pm.environment.get(\"BASE URL\") + \"/api/v1/planpro/users/register/\" + pm.//environment.get(\"username\"),\r",
+							"       // method: 'GET',\r",
+							"     //   header: {\r",
+							"       //     'Authorization': 'Bearer ' + pm.environment.get(\"TOKEN\")\r",
+							"      //  }\r",
+							"    //};\r",
+							"    // Send the request\r",
+							"   pm.sendRequest(request, function (error, response) {\r",
+							"       if (response.code !== 200) {\r",
+							"           console.log(response.json());\r",
+							"        }\r",
+							"        pm.expect(error).to.not.be.ok;\r",
+							"       pm.expect(response).to.have.status(200);\r",
+							"       // Add more checks here if necessary\r",
+							"    });\r",
+							"//});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base URL}}/api/v1/planpro/users/register/{{name_env}}",
+					"host": [
+						"{{Base URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"planpro",
+						"users",
+						"register",
+						"{{name_env}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user details from Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var random=Math.random().toString(36).substring(2);\r",
+							"\r",
+							"var useremail=\"test\"+random+\"@gmail.com\";\r",
+							"var username=\"test\"+random;\r",
+							"\r",
+							"pm.environment.set(\"randomemail\", useremail);\r",
+							"\r",
+							"pm.environment.set(\"randomname\", username);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test('Response time is less than 500ms', function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{randomname}}\",\r\n    \"email\": \"{{randomemail}}\"\r\n    //\"password\": \"Stanga123.\",\r\n    //\"repeatPassword\":\"Stanga123.\"\r\n    \r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base URL}}/api/v1/planpro/users/register/{{username}}",
+					"host": [
+						"{{Base URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"planpro",
+						"users",
+						"register",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users from Registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base URL}}/api/v1/planpro/users/register/",
+					"host": [
+						"{{Base URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"planpro",
+						"users",
+						"register",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Registration//ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201', function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"})\r",
+							"    pm.test(\"Email is not already taken\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.email).to.not.be.a('null');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is correct\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body contains user data\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.name).to.eql(pm.environment.get(\"randomname\"));\r",
+							"    pm.expect(jsonData.email).to.eql(pm.environment.get(\"randomemail\"));\r",
+							"  \r",
+							"})\r",
+							"pm.test('Response time is less than 3000ms', function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+							"})\r",
+							"\r",
+							"//pm.test(\"Response body has expected structure\", function () {\r",
+							"   // var jsonData = pm.response.json();\r",
+							"   // pm.expect(jsonData).to.have.keys(\"id\", \"name\", \"email\");\r",
+							"//});\r",
+							"\r",
+							"pm.test(\"Response body has expected values\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"randomname\"));\r",
+							"    pm.expect(jsonData.email).to.eql(pm.environment.get(\"randomemail\"));\r",
+							"  \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//var name = pm.variables.replaceIn(\"{{$Randomname}}\");\r",
+							"//pm.collectionVariables.set(\"name\", name);\r",
+							"\r",
+							"///=var email = pm.variables.replaceIn(\"{{$Randomemail}}\");\r",
+							"//pm.collectionVariables.set(\"email\", email);\r",
+							"var random=Math.random().toString(36).substring(2);\r",
+							"\r",
+							"var useremail=\"test\"+random+\"@gmail.com\";\r",
+							"var username=\"test\"+random;\r",
+							"\r",
+							"pm.environment.set(\"randomemail\", useremail);\r",
+							"pm.environment.set(\"randomname\", username);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "name",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n    \"name\": \"{{randomname}}\",\r\n    \"email\": \"{{randomemail}}\",\r\n    \"password\": \"Stanga123.\",\r\n    \"repeatPassword\":\"Stanga123.\"\r\n    \r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base URL}}/api/v1/planpro/users/register",
+					"host": [
+						"{{Base URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"planpro",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "userEmail",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "nameUpdate",
+			"value": ""
+		}
+	]
+}
